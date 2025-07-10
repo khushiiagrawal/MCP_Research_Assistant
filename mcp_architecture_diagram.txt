@@ -1,0 +1,60 @@
+```
++----------------------------------------------------------------------+
+|                    MODEL CONTEXT PROTOCOL (MCP)                      |
++----------------------------------------------------------------------+
+                               |
+        +---------------------+|+---------------------+
+        |                     ||                      |
++-------v-------+    +--------v--------+    +---------v--------+
+| CLIENT-SERVER |    | CORE COMPONENTS |    | CONNECTION FLOW  |
+| ARCHITECTURE  |    |                 |    |                  |
++---------------+    +-----------------+    +------------------+
+        |                     |                      |
++-------v-------+    +--------v--------+    +---------v--------+
+|   HOSTS       |    | PROTOCOL LAYER  |    | 1. INITIALIZATION|
+| (LLM Apps)    |    |                 |    |                  |
+|               |    | * Protocol      |    | * initialize req |
++---------------+    | * Client        |    | * server resp    |
+        |            | * Server        |    | * initialized    |
++-------v-------+    +-----------------+    +------------------+
+|   CLIENTS     |             |                      |
+| (1:1 conn)    |    +--------v--------+    +---------v--------+
+|               |    | TRANSPORT LAYER |    | 2. MESSAGE       |
++---------------+    |                 |    |    EXCHANGE      |
+        |            | * Stdio         |    |                  |
++-------v-------+    | * HTTP          |    | * Req-Response   |
+|   SERVERS     |    |                 |    | * Notifications  |
+| (provide      |    +-----------------+    +------------------+
+|  context)     |             |                      |
++---------------+    +--------v--------+    +---------v--------+
+                     | MESSAGE TYPES   |    | 3. TERMINATION   |
+                     |                 |    |                  |
+                     | * Requests      |    | * close()        |
+                     | * Results       |    | * disconnection  |
+                     | * Errors        |    | * errors         |
+                     | * Notifications |    |                  |
+                     +-----------------+    +------------------+
+
++----------------------------------------------------------------------+
+|                          BEST PRACTICES                              |
++----------------------------------------------------------------------+
+        |                     |                      |
++-------v-------+    +--------v--------+    +---------v--------+
+| TRANSPORT     |    | MESSAGE         |    | SECURITY         |
+| SELECTION     |    | HANDLING        |    | CONSIDERATIONS   |
+|               |    |                 |    |                  |
+| * Local: stdio|    | * Validation    |    | * TLS            |
+| * Remote: HTTP|    | * Timeouts      |    | * Validation     |
+|               |    | * Progress      |    | * Access control |
+|               |    | * Error codes   |    | * Error handling |
++---------------+    +-----------------+    +------------------+
+                                                     |
+                                           +---------v--------+
+                                           | DEBUGGING &      |
+                                           | MONITORING       |
+                                           |                  |
+                                           | * Logging        |
+                                           | * Diagnostics    |
+                                           | * Testing        |
+                                           +------------------+
+```
