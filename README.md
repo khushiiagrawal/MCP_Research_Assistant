@@ -1,203 +1,308 @@
-# MCP Research Server
+# MCP Research Assistant 🧠
 
-A Model Context Protocol (MCP) server that provides tools for searching and managing research papers from arXiv.
+A comprehensive Model Context Protocol (MCP) setup that provides powerful tools for research, file management, and web content fetching. This project integrates multiple MCP servers to enhance your AI assistant capabilities.
 
-## Features
+## ✨ Features
 
-- **Search Papers**: Search for research papers on arXiv by topic
-- **Extract Paper Info**: Retrieve detailed information about specific papers
-- **Local Storage**: Automatically saves paper information to local JSON files organized by topic
-- **Multiple LLM Support**: Works with both Claude (Anthropic) and Gemini (Google) APIs
+- **📚 Research Tool**: Search and manage academic papers from arXiv
+- **📁 Filesystem Tool**: Browse, read, and manage project files
+- **🌐 Fetch Tool**: Retrieve content from websites and APIs
+- **🤖 Multi-LLM Support**: Works with Claude, Gemini, and other AI models
+- **💾 Local Storage**: Automatically saves research data organized by topics
 
-## Prerequisites
+## 🛠️ Prerequisites
 
 - Python 3.13 or higher
 - `uv` package manager (recommended) or `pip`
-- API key for your chosen LLM provider
+- API keys for your chosen LLM providers
+- Claude Desktop (for MCP integration)
 
-## Installation
+## 🚀 Quick Start
 
-1. **Clone or navigate to the project directory:**
+### 1. Clone and Setup
+
+```bash
+git clone <your-repo-url>
+cd mcp_project
+```
+
+### 2. Install Dependencies
+
+```bash
+# Install uv if you haven't already
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Create virtual environment and install dependencies
+uv sync
+```
+
+### 3. Configure Environment Variables
+
+Create a `.env` file in your project root:
+
+```env
+# Choose one or both depending on your needs
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+GOOGLE_API_KEY=your_google_api_key_here
+```
+
+### 4. Configure Claude Desktop
+
+Create or update your Claude Desktop configuration file:
+
+**Location**: `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
+
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "."
+      ],
+      "cwd": "/path/to/your/mcp_project"
+    },
+    "research": {
+      "command": "/path/to/your/mcp_project/.venv/bin/python",
+      "args": [
+        "/path/to/your/mcp_project/research_server.py"
+      ],
+      "cwd": "/path/to/your/mcp_project"
+    },
+    "fetch": {
+      "command": "/path/to/your/.local/bin/uvx",
+      "args": ["mcp-server-fetch"],
+      "cwd": "/path/to/your/mcp_project"
+    }
+  }
+}
+```
+
+**Important**: Replace `/path/to/your/mcp_project` with your actual project path.
+
+### 5. Restart Claude Desktop
+
+Restart Claude Desktop completely to load the new configuration.
+
+## 🎯 How to Use
+
+### Research Tool 🔬
+
+**Search for Papers:**
+```
+Search for 5 papers about machine learning
+```
+
+**Get Paper Details:**
+```
+Show me information about paper ID 1234.5678
+```
+
+**Browse Saved Papers:**
+```
+What papers do I have saved on physics?
+```
+
+### Filesystem Tool 📁
+
+**Browse Files:**
+```
+List all files in my project directory
+```
+
+**Read Files:**
+```
+Show me the contents of research_server.py
+```
+
+**Create Files:**
+```
+Create a new Python script for data analysis
+```
+
+### Fetch Tool 🌐
+
+**Get Web Content:**
+```
+Fetch the latest Python documentation
+```
+
+**API Calls:**
+```
+Get current weather data from an API
+```
+
+## 📋 Available Tools
+
+### Research Server Tools
+
+| Tool | Description | Parameters |
+|------|-------------|------------|
+| `search_papers` | Search arXiv for papers | `topic`, `max_results` |
+| `extract_info` | Get paper details | `paper_id` |
+| `get_available_folders` | List saved topics | None |
+
+### Filesystem Server Tools
+
+| Tool | Description |
+|------|-------------|
+| `read_file` | Read file contents |
+| `write_file` | Write to files |
+| `list_dir` | List directory contents |
+| `delete_file` | Delete files |
+
+### Fetch Server Tools
+
+| Tool | Description |
+|------|-------------|
+| `fetch` | Fetch content from URLs |
+
+## 📁 Project Structure
+
+```
+mcp_project/
+├── research_server.py          # Main research MCP server
+├── mcp_chatbot_L7.py          # Chatbot with LLM integration
+├── pyproject.toml             # Project configuration
+├── requirements.txt           # Python dependencies
+├── uv.lock                   # Dependency lock file
+├── papers/                   # Research data storage
+│   └── [topic_name]/         # Organized by topic
+│       └── papers_info.json  # Paper metadata
+├── .env                      # Environment variables
+└── README.md                 # This file
+```
+
+## 🔧 Configuration Details
+
+### Research Server Configuration
+
+The research server automatically:
+- Creates topic-based directories in `papers/`
+- Saves paper metadata as JSON files
+- Provides search and retrieval functions
+- Integrates with arXiv API
+
+### Filesystem Server Configuration
+
+The filesystem server:
+- Operates within your project directory
+- Provides full file management capabilities
+- Uses relative paths for portability
+
+### Fetch Server Configuration
+
+The fetch server:
+- Handles web requests and API calls
+- Supports custom user agents
+- Can ignore robots.txt restrictions
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+**1. "spawn uv ENOENT" Error**
+- **Solution**: Use full paths to `uv` and `uvx` in your config
+- **Example**: `/Users/username/.local/bin/uv`
+
+**2. "ModuleNotFoundError: No module named 'arxiv'**
+- **Solution**: Use Python executable from virtual environment
+- **Example**: `/path/to/project/.venv/bin/python`
+
+**3. "Failed to spawn: research_server.py"**
+- **Solution**: Use absolute paths in configuration
+- **Example**: `/full/path/to/research_server.py`
+
+**4. Claude Desktop Not Loading Tools**
+- **Solution**: Restart Claude Desktop completely
+- **Check**: Verify configuration file location and syntax
+
+### Debugging Steps
+
+1. **Check Dependencies:**
    ```bash
-   cd mcp_project
+   uv pip list
    ```
 
-2. **Create a virtual environment:**
-   ```bash
-   uv venv
-   source .venv/bin/activate  # On macOS/Linux
-   # or
-   .venv\Scripts\activate     # On Windows
-   ```
-
-3. **Install dependencies:**
-   ```bash
-   uv pip install arxiv
-   ```
-
-## LLM Configuration
-
-### Option 1: Using Claude (Anthropic) - Original Setup
-
-1. **Get your Anthropic API key:**
-   - Visit: https://console.anthropic.com/
-   - Create an account and get your API key
-
-2. **Set up environment variables:**
-   ```bash
-   export ANTHROPIC_API_KEY=your_api_key_here
-   ```
-   
-   Or create a `.env` file:
-   ```
-   ANTHROPIC_API_KEY=your_api_key_here
-   ```
-
-3. **Install Claude dependencies:**
-   ```bash
-   uv add anthropic
-   ```
-
-### Option 2: Using Gemini (Google) - New Setup
-
-1. **Get your Google API key:**
-   - Visit: https://makersuite.google.com/app/apikey
-   - Create an account and get your API key
-
-2. **Set up environment variables:**
-   ```bash
-   export GOOGLE_API_KEY=your_api_key_here
-   ```
-   
-   Or create a `.env` file:
-   ```
-   GOOGLE_API_KEY=your_api_key_here
-   ```
-
-3. **Install Gemini dependencies:**
-   ```bash
-   uv add google-generativeai python-dotenv
-   ```
-
-## Running the Server
-
-### Method 1: Using MCP Inspector (Recommended for Testing)
-
-1. **Start the server with MCP Inspector:**
-   ```bash
-   npx @modelcontextprotocol/inspector uv run research_server.py
-   ```
-
-2. **Access the Inspector:**
-   - Open your browser and go to: `http://127.0.0.1:6274`
-   - Use the provided session token for authentication
-
-### Method 2: Direct Execution
-
-1. **Run the server directly:**
+2. **Test Server Manually:**
    ```bash
    uv run research_server.py
    ```
 
-### Method 3: Using the Chatbot
-
-1. **Run the chatbot with your chosen LLM:**
+3. **Verify Configuration:**
    ```bash
-   # For Claude (original)
-   uv run mcp_chatbot.py
-   
-   # For Gemini (new)
-   uv run mcp_chatbot.py
+   cat ~/Library/Application\ Support/Claude/claude_desktop_config.json
    ```
 
-## Available Tools
+4. **Check Environment:**
+   ```bash
+   echo $ANTHROPIC_API_KEY
+   echo $GOOGLE_API_KEY
+   ```
 
-### 1. `search_papers`
-Searches for papers on arXiv based on a topic and stores their information locally.
+## 🎓 Example Workflows
 
-**Parameters:**
-- `topic` (str): The topic to search for
-- `max_results` (int, optional): Maximum number of results (default: 5)
+### Research Workflow
 
-**Returns:** List of paper IDs found
+1. **Search for Papers:**
+   ```
+   Search for 10 papers about transformer models
+   ```
 
-**Example:**
-```json
-{
-  "topic": "machine learning",
-  "max_results": 10
-}
+2. **Review Abstracts:**
+   ```
+   Show me the summary of paper 2301.12345
+   ```
+
+3. **Organize Findings:**
+   ```
+   Create a summary file of the key findings
+   ```
+
+### Development Workflow
+
+1. **Browse Code:**
+   ```
+   List all Python files in my project
+   ```
+
+2. **Read Documentation:**
+   ```
+   Fetch the latest API documentation
+   ```
+
+3. **Create New Features:**
+   ```
+   Create a new test file for my chatbot
+   ```
+
+## 🔄 Updating Dependencies
+
+```bash
+# Add new dependencies
+uv add package_name
+
+# Update requirements.txt
+uv pip freeze > requirements.txt
+
+# Sync all dependencies
+uv sync
 ```
 
-### 2. `extract_info`
-Retrieves detailed information about a specific paper from local storage.
+## 📝 Development
 
-**Parameters:**
-- `paper_id` (str): The ID of the paper to look for
+### Adding New Tools
 
-**Returns:** JSON string with paper information
+1. Edit `research_server.py` to add new functions
+2. Use the `@mcp.tool()` decorator
+3. Test with MCP Inspector
+4. Update documentation
 
-**Example:**
-```json
-{
-  "paper_id": "2301.12345"
-}
-```
+### Customizing LLM Behavior
 
-## Project Structure
+1. Edit `mcp_chatbot_L7.py`
+2. Modify tool descriptions and parameters
+3. Add custom prompts and resources
 
-```
-mcp_project/
-├── research_server.py    # Main MCP server implementation
-├── mcp_chatbot.py       # Chatbot with LLM integration
-├── pyproject.toml        # Project configuration
-├── uv.lock              # Dependency lock file
-├── papers/              # Directory where paper data is stored
-│   └── [topic_name]/    # Organized by topic
-│       └── papers_info.json
-└── README.md           # This file
-```
-
-## How It Works
-
-1. **Paper Search**: When you search for papers, the server:
-   - Queries arXiv using the provided topic
-   - Downloads paper metadata (title, authors, summary, PDF URL, publication date)
-   - Saves the information to a JSON file organized by topic
-   - Returns the paper IDs for reference
-
-2. **Paper Retrieval**: When you extract paper info, the server:
-   - Searches through all topic directories
-   - Finds the requested paper by ID
-   - Returns the stored information in JSON format
-
-3. **LLM Integration**: The chatbot:
-   - Connects to your chosen LLM (Claude or Gemini)
-   - Provides tools to the LLM for paper search and retrieval
-   - Handles function calling and tool execution automatically
-
-## Data Storage
-
-Paper information is automatically saved to the `papers/` directory, organized by topic. Each topic gets its own subdirectory containing a `papers_info.json` file with all the papers found for that topic.
-
-## Troubleshooting
-
-- **Python Version**: Ensure you're using Python 3.13 or higher
-- **Dependencies**: Make sure all dependencies are installed with `uv pip install arxiv`
-- **Virtual Environment**: Always activate the virtual environment before running the server
-- **Permissions**: Ensure you have write permissions in the project directory for creating the `papers/` folder
-- **API Keys**: Make sure your API key is properly set in environment variables
-- **LLM Selection**: The chatbot automatically detects which API key is available and uses the corresponding LLM
-
-## Development
-
-To modify or extend the server:
-
-1. Edit `research_server.py` to add new tools or modify existing ones
-2. Edit `mcp_chatbot.py` to customize LLM behavior
-3. Use the MCP Inspector to test your changes
-4. The server uses FastMCP for easy tool definition and management
-
-## License
-
-This project is open source. Feel free to modify and distribute as needed.
