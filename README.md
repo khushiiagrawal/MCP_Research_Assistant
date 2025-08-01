@@ -17,7 +17,7 @@ A comprehensive Model Context Protocol (MCP) setup that provides powerful tools 
 - API keys for your chosen LLM providers
 - Claude Desktop (for MCP integration)
 
-## 🚀 Quick Start
+## 💻 Quick Start
 
 ### 1. Clone and Setup
 
@@ -199,84 +199,6 @@ The fetch server:
 - Supports custom user agents
 - Can ignore robots.txt restrictions
 
-## 🚨 Troubleshooting
-
-### Common Issues
-
-**1. "spawn uv ENOENT" Error**
-- **Solution**: Use full paths to `uv` and `uvx` in your config
-- **Example**: `/Users/username/.local/bin/uv`
-
-**2. "ModuleNotFoundError: No module named 'arxiv'**
-- **Solution**: Use Python executable from virtual environment
-- **Example**: `/path/to/project/.venv/bin/python`
-
-**3. "Failed to spawn: research_server.py"**
-- **Solution**: Use absolute paths in configuration
-- **Example**: `/full/path/to/research_server.py`
-
-**4. Claude Desktop Not Loading Tools**
-- **Solution**: Restart Claude Desktop completely
-- **Check**: Verify configuration file location and syntax
-
-### Debugging Steps
-
-1. **Check Dependencies:**
-   ```bash
-   uv pip list
-   ```
-
-2. **Test Server Manually:**
-   ```bash
-   uv run research_server.py
-   ```
-
-3. **Verify Configuration:**
-   ```bash
-   cat ~/Library/Application\ Support/Claude/claude_desktop_config.json
-   ```
-
-4. **Check Environment:**
-   ```bash
-   echo $ANTHROPIC_API_KEY
-   echo $GOOGLE_API_KEY
-   ```
-
-## 🎓 Example Workflows
-
-### Research Workflow
-
-1. **Search for Papers:**
-   ```
-   Search for 10 papers about transformer models
-   ```
-
-2. **Review Abstracts:**
-   ```
-   Show me the summary of paper 2301.12345
-   ```
-
-3. **Organize Findings:**
-   ```
-   Create a summary file of the key findings
-   ```
-
-### Development Workflow
-
-1. **Browse Code:**
-   ```
-   List all Python files in my project
-   ```
-
-2. **Read Documentation:**
-   ```
-   Fetch the latest API documentation
-   ```
-
-3. **Create New Features:**
-   ```
-   Create a new test file for my chatbot
-   ```
 
 ## 🔄 Updating Dependencies
 
